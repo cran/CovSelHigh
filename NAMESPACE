@@ -1,0 +1,9 @@
+export(cov.sel.high)
+export(cov.sel.high.sim)
+export(cov.sel.high.sim.res)
+export(cov.sel.high.lasso)
+export(cov.sel.high.rf)
+import(bnlearn, MASS, bindata, Matching, doRNG, glmnet, randomForest,foreach,xtable,doParallel)
+importFrom("stats", "as.formula", "binomial", "coef", "glm", "median",
+            "model.matrix", "rbinom", "rnorm", "sd", "var")
+importFrom("utils", "combn")
