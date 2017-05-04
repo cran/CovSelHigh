@@ -20,7 +20,7 @@ Function used internally by cov.sel.high to simulates example data used in Hägg
 }
 \references{ 
 
-Häggström, J. (2016). Data-Driven Confounder Selection via Markov and Bayesian Networks. \emph{ArXiv e-prints}.
+Häggström, J. (2017). Data-Driven Confounder Selection via Markov and Bayesian Networks. \emph{ArXiv e-prints}.
 
 }
 

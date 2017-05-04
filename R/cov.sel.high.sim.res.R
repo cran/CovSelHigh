@@ -6,7 +6,9 @@ rep<-object[[1]]$rep
 Models<-object[[1]]$Models
 type<-object[[1]]$type 
 varnames<-object[[1]]$varnames
-resmat<-matrix(NA,ncol=50,nrow=rep)
+if(is.null(object[[1]]$est_psm)){betahat<-FALSE}else{betahat<-TRUE}
+if(betahat==TRUE){resmat<-matrix(NA,ncol=92,nrow=rep)}else{resmat<-matrix(NA,ncol=20,nrow=rep)}
+
 covarcol<-1:(length(varnames)-2)  
 ycol<-length(varnames)-1
 Tcol<-length(varnames)
@@ -23,9 +25,9 @@ if(Setting==1){
   uc2<-varnames[c(1,2,8)]
   XTS<-varnames[c(1,2,3,4,7)]
   Q1S<-Q0S<-QS<-varnames[c(1,2,7)]
-  X1S<-X0S<-XS<-varnames[c(1,2,5,6,8)]
+  X1S<-X0S<-XYS<-varnames[c(1,2,5,6,8)]
   Z1S<-Z0S<-ZS<-varnames[c(1,2,8)]
-  XdS<-varnames[1:8]
+  XTYS<-varnames[1:8]
 }
 
 if(Setting==2){
@@ -33,9 +35,9 @@ if(Setting==2){
   uc2<-varnames[c(1,2,4,8)]
   XTS<-varnames[c(1,2,3,4,7)]
   Q1S<-Q0S<-QS<-varnames[c(1,2,4,7)]
-  X1S<-X0S<-XS<-varnames[c(1,2,5,6,8)]
+  X1S<-X0S<-XYS<-varnames[c(1,2,5,6,8)]
   Z1S<-Z0S<-ZS<-varnames[c(1,2,8)]
-  XdS<-varnames[1:8]
+  XTYS<-varnames[1:8]
   collider<-"x9"
 }
   
@@ -46,17 +48,13 @@ for(i in 1:rep){
      Q<-object[[i]]$Q
      XY<-object[[i]]$X.Y
      Z<-object[[i]]$Z
-     XD<-object[[i]]$X.TY
+     XTY<-object[[i]]$X.TY
      cards<-numeric(5)
      for(j in 1:5){
                   cards[j]<-object[[i]]$cardinalities[[j]]
-                  }
-     betahatest<-betahatse<-numeric(6)
-     for(j in 1:6){
-                  betahatest[j]<-object[[i]]$est[[j]]
-                  betahatse[j]<-object[[i]]$se[[j]]
-                  }
+     }
      
+ 
     #Common cause criterion (Waernbaum, de Luna and Richardson)
     ##Algorithm 1
     ##Subset X.T
@@ -94,18 +92,18 @@ for(i in 1:rep){
     ##Algortithm 2
     ##Subset X.Y
     if(length(XY)==0){
-          Xuc<-SinX<-XeqS<-0
+          XYuc<-SinXY<-XYeqS<-0
           }else{
-                Xuc1<-length(which(match(uc1,XY)!="NA"))
-                Xuc2<-length(which(match(uc2,XY)!="NA"))
+                XYuc1<-length(which(match(uc1,XY)!="NA"))
+                XYuc2<-length(which(match(uc2,XY)!="NA"))
                 if(Setting==1){
-                        Xuc<-ifelse(Xuc1==length(uc1) || Xuc2==length(uc2),1,0)
+                        XYuc<-ifelse(XYuc1==length(uc1) || XYuc2==length(uc2),1,0)
                         }else{
-                              Xuc0<-ifelse(Xuc1==length(uc1) || Xuc2==length(uc2),1,0)
-                              Xuc<-ifelse((Xuc0==1) && (length(which(match(collider,XY)!="NA")))==0,1,0)
+                              XYuc0<-ifelse(XYuc1==length(uc1) || XYuc2==length(uc2),1,0)
+                              XYuc<-ifelse((XYuc0==1) && (length(which(match(collider,XY)!="NA")))==0,1,0)
                               }
-                SinX<-ifelse(length(which(match(XS,XY)!="NA"))==length(XS),1,0)
-                XeqS<-ifelse(SinX==1 && length(XY)==length(XS),1,0)
+                SinXY<-ifelse(length(which(match(XYS,XY)!="NA"))==length(XYS),1,0)
+                XYeqS<-ifelse(SinXY==1 && length(XY)==length(XYS),1,0)
                 }
 
     ##Subset Z
@@ -126,36 +124,66 @@ for(i in 1:rep){
                   
     #Disjunctive cause criterion (VanderWeele and Shpitser)
     ##Subset X.D
-    if(length(XD)==0){
-          Xduc<-SinXd<-XdeqS<-0
+    if(length(XTY)==0){
+          XTYuc<-SinXTY<-XTYeqS<-0
           }else{             
-                Xduc1<-length(which(match(uc1,XD)!="NA"))
-                Xduc2<-length(which(match(uc2,XD)!="NA"))
+                XTYuc1<-length(which(match(uc1,XTY)!="NA"))
+                XTYuc2<-length(which(match(uc2,XTY)!="NA"))
                 if(Setting==1){
-                        Xduc<-ifelse(Xduc1==length(uc1) || Xduc2==length(uc2),1,0)
+                        XTYuc<-ifelse(XTYuc1==length(uc1) || XTYuc2==length(uc2),1,0)
                         }else{ 
-                              Xduc0<-ifelse(Xduc1==length(uc1) || Xduc2==length(uc2),1,0)
-                              Xduc<-ifelse((Xduc0==1) && (length(which(match(collider,XD)!="NA")))==0,1,0)
+                              XTYuc0<-ifelse(XTYuc1==length(uc1) || XTYuc2==length(uc2),1,0)
+                              XTYuc<-ifelse((XTYuc0==1) && (length(which(match(collider,XTY)!="NA")))==0,1,0)
                               }
-                        SinXd<-ifelse(length(which(match(XdS,XD)!="NA"))==length(XdS),1,0)
-                        XdeqS<-ifelse(SinXd==1 && length(XD)==length(XdS),1,0)
+                        SinXTY<-ifelse(length(which(match(XTYS,XTY)!="NA"))==length(XTYS),1,0)
+                        XTYeqS<-ifelse(SinXTY==1 && length(XTY)==length(XTYS),1,0)
                 }
  
                   
+     if(betahat==TRUE){
+     betahatest_psm<-betahatest_tmle<-betahatse_psm<-betahatse_tmle<-numeric(6)
+     for(j in 1:6){
+       betahatest_psm[j]<-object[[i]]$est_psm[[j]]
+       betahatse_psm[j]<-object[[i]]$se_psm[[j]]
+       betahatest_tmle[j]<-object[[i]]$est_tmle[[j]]
+       betahatse_tmle[j]<-object[[i]]$se_tmle[[j]]
+     }
+     
+     
     ##Confidence intervals for ATE estimates                
-    ciL<-betahatest-1.96*betahatse
-    ciU<-betahatest+1.96*betahatse
+    ciL_psm<-betahatest_psm-1.96*betahatse_psm
+    ciU_psm<-betahatest_psm+1.96*betahatse_psm
+    ciwidth_psm<-ciU_psm-ciL_psm
+    ciL_tmle<-betahatest_tmle-1.96*betahatse_tmle
+    ciU_tmle<-betahatest_tmle+1.96*betahatse_tmle
+    ciwidth_tmle<-ciU_tmle-ciL_tmle
     ## Coverage indicator
-    cimat<-matrix(c(ciL,ciU),ncol=2)
-
-    cifunc<-function(cimat){cicov<-ifelse(cimat[1]<beta && cimat[2]>beta,1,0)}
-    betahat_cicov<-apply(cimat,1,cifunc) 
+    cimat1<-matrix(c(ciL_psm,ciU_psm),ncol=2)
+    cimat2<-matrix(c(ciL_tmle,ciU_tmle),ncol=2)
+    cifunc<-function(cimat){
+      cicov<-ifelse(cimat[1]<beta && cimat[2]>beta,1,0)
+      }
+    betahat_cicov_psm<-apply(cimat1,1,cifunc) 
+    betahat_cicov_tmle<-apply(cimat2,1,cifunc) 
     
     #Matrix with results for every replication
-    resmat[i,]<-c(XTuc,Quc,Xuc,Zuc,Xduc,
-                  SinXT,SinQ,SinX,SinZ,SinXd,
-                  XTeqS,QeqS,XeqS,ZeqS,XdeqS,
-                  cards, betahatest, betahatse, betahat_cicov, ciL, ciU)
+    resmat[i,]<-c(XTuc,Quc,XYuc,Zuc,XTYuc,
+                  SinXT,SinQ,SinXY,SinZ,SinXTY,
+                  XTeqS,QeqS,XYeqS,ZeqS,XTYeqS,
+                  cards, betahatest_psm, betahatse_psm, 
+                  betahat_cicov_psm, ciL_psm, ciU_psm,
+                  betahatest_tmle, betahatse_tmle,
+                  betahat_cicov_tmle, ciL_tmle, ciU_tmle,ciwidth_psm,ciwidth_tmle)
+    
+   
+     }else{
+       
+       resmat[i,]<-c(XTuc,Quc,XYuc,Zuc,XTYuc,
+                     SinXT,SinQ,SinXY,SinZ,SinXTY,
+                     XTeqS,QeqS,XYeqS,ZeqS,XTYeqS,
+                     cards)
+       
+     }
       
     }
 #Summarizes the simulation results            
@@ -164,44 +192,117 @@ for(i in 1:rep){
 ss_uc<-matrix(colMeans(resmat)[1:15],nrow=5)
 ##Median cardinalities
 med_cards<-apply(resmat[,16:20],2,median) 
+
+if(betahat==TRUE){
 ##ATE bias
-betahat_bias<-colMeans(resmat[,21:26])-beta
+betahat_bias_psm<-colMeans(resmat[,21:26],na.rm=TRUE)-beta
 ##ATE SD
-betahat_sd<-apply(resmat[,21:26],2,sd) 
+betahat_sd_psm<-apply(resmat[,21:26],2,sd,na.rm=TRUE) 
 ##ATE MSE
-betahat_mse<-betahat_bias^2+apply(resmat[,21:26],2,var)
+betahat_mse_psm<-betahat_bias_psm^2+apply(resmat[,21:26],2,var,na.rm=TRUE)
 ##Mean CI coverage
-betahat_meancoverage<-colMeans(resmat)[33:38]
+betahat_meancoverage_psm<-colMeans(resmat,na.rm=TRUE)[33:38]
 ##Mean lower CI
-mean_ciL<-colMeans(resmat[,39:44])
+mean_ciL_psm<-colMeans(resmat[,39:44],na.rm=TRUE)
 ##Mean upper CI
-mean_ciU<-colMeans(resmat[,45:50])
-    
+mean_ciU_psm<-colMeans(resmat[,45:50],na.rm=TRUE)
+##Mean CI width
+mean_ciwidth_psm<-colMeans(resmat[,81:86],na.rm=TRUE)
+
+
+##ATE bias
+betahat_bias_tmle<-colMeans(resmat[,51:56],na.rm=TRUE)-beta
+##ATE SD
+betahat_sd_tmle<-apply(resmat[,51:56],2,sd,na.rm=TRUE) 
+##ATE MSE
+betahat_mse_tmle<-betahat_bias_tmle^2+apply(resmat[,51:56],2,var,na.rm=TRUE)
+##Mean CI coverage
+betahat_meancoverage_tmle<-colMeans(resmat,na.rm=TRUE)[63:68]
+##Mean lower CI
+mean_ciL_tmle<-colMeans(resmat[,69:74],na.rm=TRUE)
+##Mean upper CI
+mean_ciU_tmle<-colMeans(resmat[,75:80],na.rm=TRUE)
+##Mean CI width
+mean_ciwidth_tmle<-colMeans(resmat[,87:92],na.rm=TRUE)
+
+
+
 ##List containing simulation results                              
 summary_resmat<-list(Subset_selection=ss_uc,Median_cardinality=med_cards,
-                         Betahat_bias=betahat_bias,Betahat_sd=betahat_sd,
-                         Betahat_MSE=betahat_mse,Betahat_CI_coverage=betahat_meancoverage,
-                         Betahat_mean_lower_CI=mean_ciL,Betahat_mean_upper_CI=mean_ciU)
+                     Betahat_bias_psm=betahat_bias_psm,Betahat_sd_psm=betahat_sd_psm,
+                     Betahat_mse_psm=betahat_mse_psm,Betahat_CI_coverage_psm=betahat_meancoverage_psm,Betahat_CI_width_psm=mean_ciwidth_psm,
+                     Betahat_mean_lower_CI_psm=mean_ciL_psm,Betahat_mean_upper_CI_psm=mean_ciU_psm,
+                     Betahat_bias_tmle=betahat_bias_tmle,Betahat_sd_tmle=betahat_sd_tmle,
+                     Betahat_mse_tmle=betahat_mse_tmle,Betahat_CI_coverage_tmle=betahat_meancoverage_tmle,Betahat_CI_width_tmle=mean_ciwidth_tmle,
+                     Betahat_mean_lower_CI_tmle=mean_ciL_tmle,Betahat_mean_upper_CI_tmle=mean_ciU_tmle)
 ##Table for producing LaTeX table with simulation results                              
-xtab1<-data.frame(matrix(c(" ", N, rep(" ",4), " ", type, rep(" ", 4)), ncol=2))
-xtab2<-data.frame(matrix(c("$X$", "$\\hat{X}_{\\rightarrow T}$", "$\\hat{Q}_{\\rightarrow T}$" ,"$ \\hat{X}_{\\rightarrow Y}$" , "$\\hat{Z}_{\\rightarrow Y}$",
-                               "$\\hat{X}_{\\rightarrow T, Y}$" ), ncol=1))
+xtab11<-data.frame(matrix(c( N, rep(" ",5), " ", type, rep(" ", 4)), ncol=2))
+xtab21<-data.frame(matrix(c("$X$", "$\\hat{X}_{\\rightarrow T}$", "$\\hat{Q}_{\\rightarrow T}$" ,"$ \\hat{X}_{\\rightarrow Y}$" , "$\\hat{Z}_{\\rightarrow Y}$",
+                            "$\\hat{X}_{\\rightarrow T, Y}$" ), ncol=1))
 if(Setting==1){
-xtab3<-data.frame(rbind(c(1,1,0),summary_resmat$Subset_selection)*100)
+  xtab31<-data.frame(rbind(c(1,1,1),summary_resmat$Subset_selection)*100)
 }else{
-xtab3<-data.frame(rbind(c(0,1,0),summary_resmat$Subset_selection)*100)
+  xtab31<-data.frame(rbind(c(0,1,0),summary_resmat$Subset_selection)*100)
   
 }
-xtab4<-data.frame(matrix(c(100,summary_resmat$Median_cardinality,summary_resmat$Betahat_bias,
-                               summary_resmat$Betahat_sd,summary_resmat$Betahat_MSE,
-                               summary_resmat$Betahat_CI_coverage*100, summary_resmat$Betahat_mean_lower_CI,
-                               summary_resmat$Betahat_mean_upper_CI),ncol=7))
-xtab<-cbind(xtab1,xtab2, xtab3,xtab4)
-digits<-c(rep(0,4),rep(1,3),0,rep(3,3),1,rep(3,2))
-align<-c(rep("l",4),rep("r",10))
-colnames(xtab)<-c("n","Method","$\\hat{S}$" ," $Y_t \\perp\\!\\!\\!\\perp T \\mid \\hat{S}$",
-                  "$S \\subseteq \\hat{S}$","$S=\\hat{S}$",  "\\#", "Bias", "SD" ,"MSE", "CP" ,"CIL", "CIU")
-xtab_res<-xtable(x=xtab,digits=digits,align=align)
-                                  
-return(list(resmat=resmat,summary_resmat=summary_resmat,xtable=xtab_res))
+xtab41<-data.frame(matrix(c(100,summary_resmat$Median_cardinality,summary_resmat$Betahat_bias_psm,
+                            summary_resmat$Betahat_sd_psm,summary_resmat$Betahat_mse_psm,
+                            summary_resmat$Betahat_bias_tmle,summary_resmat$Betahat_sd_tmle,summary_resmat$Betahat_mse_tmle),ncol=7))
+xtab1<-cbind(xtab11,xtab21, xtab31,xtab41)
+digits1<-c(rep(0,4),rep(1,3),0,rep(3,6))
+align1<-c(rep("l",4),rep("r",10))
+colnames(xtab1)<-c("n","Method","$\\hat{S}$" ," $Y_t \\perp\\!\\!\\!\\perp T \\mid \\hat{S}$",
+                   "$S \\subseteq \\hat{S}$","$S=\\hat{S}$",  "\\#", "Bias", "SD" ,"MSE", "Bias", "SD" ,"MSE")
+xtab_res1<-xtable(x=xtab1,digits=digits1,align=align1)
+
+##Table for producing LaTeX table with simulation results                              
+xtab12<-data.frame(matrix(c(N, rep(" ",5), " ", type, rep(" ", 4)), ncol=2))
+xtab22<-data.frame(matrix(c("$X$", "$\\hat{X}_{\\rightarrow T}$", "$\\hat{Q}_{\\rightarrow T}$" ,"$ \\hat{X}_{\\rightarrow Y}$" , "$\\hat{Z}_{\\rightarrow Y}$",
+                            "$\\hat{X}_{\\rightarrow T, Y}$" ), ncol=1))
+if(Setting==1){
+  xtab32<-data.frame(rbind(c(1,1,1),summary_resmat$Subset_selection)*100)[,1]
+}else{
+  xtab32<-data.frame(rbind(c(0,1,0),summary_resmat$Subset_selection)*100)[,1]
+  
+}
+xtab42<-data.frame(matrix(c(summary_resmat$Betahat_CI_coverage_psm*100,summary_resmat$Betahat_CI_width_psm, summary_resmat$Betahat_mean_lower_CI_psm,
+                            summary_resmat$Betahat_mean_upper_CI_psm,
+                            summary_resmat$Betahat_CI_coverage_tmle*100,summary_resmat$Betahat_CI_width_tmle, summary_resmat$Betahat_mean_lower_CI_tmle,
+                            summary_resmat$Betahat_mean_upper_CI_tmle),ncol=8))
+xtab2<-cbind(xtab12,xtab22, xtab32,xtab42)
+digits2<-c(rep(0,4),rep(1,3),rep(3,2),1,1,rep(3,2))
+align2<-c(rep("l",4),rep("r",9))
+colnames(xtab2)<-c("n","Method","$\\hat{S}$" ," $Y_t \\perp\\!\\!\\!\\perp T \\mid \\hat{S}$", "CP","CIW" ,"CIL", "CIU", "CP" ,"CIW","CIL", "CIU")
+xtab_res2<-xtable(x=xtab2,digits=digits2,align=align2)
+
+}else{
+  summary_resmat<-list(Subset_selection=ss_uc,Median_cardinality=med_cards)
+  ##Table for producing LaTeX table with simulation results                              
+  xtab11<-data.frame(matrix(c( N, rep(" ",5), " ", type, rep(" ", 4)), ncol=2))
+  xtab21<-data.frame(matrix(c("$X$", "$\\hat{X}_{\\rightarrow T}$", "$\\hat{Q}_{\\rightarrow T}$" ,"$ \\hat{X}_{\\rightarrow Y}$" , "$\\hat{Z}_{\\rightarrow Y}$",
+                              "$\\hat{X}_{\\rightarrow T, Y}$" ), ncol=1))
+  if(Setting==1){
+    xtab31<-data.frame(rbind(c(1,1,1),summary_resmat$Subset_selection)*100)
+  }else{
+    xtab31<-data.frame(rbind(c(0,1,0),summary_resmat$Subset_selection)*100)
+    
+  }
+  xtab41<-data.frame(matrix(c(100,summary_resmat$Median_cardinality),ncol=1))
+  xtab1<-cbind(xtab11,xtab21, xtab31,xtab41)
+  digits1<-c(rep(0,4),rep(1,3),0)
+  align1<-c(rep("l",4),rep("r",4))
+  colnames(xtab1)<-c("n","Method","$\\hat{S}$" ," $Y_t \\perp\\!\\!\\!\\perp T \\mid \\hat{S}$",
+                     "$S \\subseteq \\hat{S}$","$S=\\hat{S}$",  "\\#")
+  xtab_res1<-xtable(x=xtab1,digits=digits1,align=align1)
+  
+  
+  xtab_res2<-NULL
+  
+  
+  
+  
+  
+}
+                               
+return(list(resmat=resmat,summary_resmat=summary_resmat,xtable1=xtab_res1,xtable2=xtab_res2))
 }

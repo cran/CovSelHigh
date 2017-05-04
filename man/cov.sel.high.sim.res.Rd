@@ -14,7 +14,7 @@ Function used to summarize results from cov.sel.high when simulated data is used
 
 \value{
  \code{cov.sel.high.sim.res} returns a list with the following content:
-  \item{resmat }{A matrix with the following columns:
+  \item{resmat }{A matrix with the following columns (columns related to average causal effect estimation are only present when \code{betahat=TRUE}):
     \code{XTuc}
     \code{Quc}  
     \code{XYuc}  
@@ -31,27 +31,49 @@ Function used to summarize results from cov.sel.high when simulated data is used
     \code{ZeqS}
     \code{XTYeqS}
     \code{cards}
-    \code{betahatest}
-    \code{betahatse}
-    \code{betahat_cicov}
-    \code{ciL}
-    \code{ciU}
+    \code{betahatest_psm}
+    \code{betahatse_psm}
+    \code{betahat_cicov_psm}
+    \code{ciL_psm}
+    \code{ciU_psm}
+    \code{betahatest_tmle}
+    \code{betahatse_tmle}
+    \code{betahat_cicov_tmle}
+    \code{ciL_tmle}
+    \code{ciU_tmle}
+    \code{ciwidth_psm}
+    \code{ciwidth_tmle}
+
   }
-    \item{summary_resmat }{A list with the following columns:
+  
+  
+    \item{summary_resmat }{A list with the following columns (columns related to average causal effect estimation are only present when \code{betahat=TRUE}):
     \code{Subset_selection}
     \code{Median_cardinality}  
-    \code{Betahat_bias}  
-    \code{Betahat_sd}  
-    \code{Betahat_MSE}  
-    \code{Betahat_CI_coverag}  
-    \code{Betahat_mean_lower_C}  
-    \code{Betahat_mean_upper_C}  
+    \code{Betahat_bias_psm}  
+    \code{Betahat_sd_psm}  
+    \code{Betahat_mse_psm}  
+    \code{Betahat_CI_coverage_psm}  
+    \code{Betahat_CI_width_psm}  
+    \code{Betahat_mean_lower_CI_psm}  
+    \code{Betahat_mean_upper_CI_psm}
+    \code{Betahat_bias_psm}  
+    \code{Betahat_sd_psm}  
+    \code{Betahat_mse_psm}  
+    \code{Betahat_CI_coverage_psm}  
+    \code{Betahat_CI_width_psm}  
+    \code{Betahat_mean_lower_CI_psm}  
+    \code{Betahat_mean_upper_CI_psm}  
   }
-  \item{xtable}{A LaTeX table}
+  
+   \item{xtable1}{LaTeX table summarizing the results.}
+  \item{xtable2}{LaTeX table summarizing the results.}
 }
+
+
 \references{ 
 
-Häggström, J. (2016). Data-Driven Confounder Selection via Markov and Bayesian Networks. \emph{ArXiv e-prints}.
+Häggström, J. (2017). Data-Driven Confounder Selection via Markov and Bayesian Networks. \emph{ArXiv e-prints}.
 
 }
 
