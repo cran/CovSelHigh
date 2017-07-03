@@ -1,5 +1,5 @@
 Package: CovSelHigh
-Version: 1.1.0
+Version: 1.1.1
 Author: Jenny Häggström
 Maintainer: Jenny Häggström <jenny.haggstrom@umu.se>
 Depends: R (>= 2.14.0)
@@ -10,6 +10,6 @@ Description: Model-free selection of covariates in high dimensions under unconfo
 License: GPL-3
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2017-05-04 11:39:19 UTC; jennyhaggstrom
+Packaged: 2017-07-03 08:37:03 UTC; jennyhaggstrom
 Repository: CRAN
-Date/Publication: 2017-05-04 15:40:18 UTC
+Date/Publication: 2017-07-03 09:35:40 UTC

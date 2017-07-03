@@ -1,6 +1,6 @@
-46892743d9d163e6070e5eb923f67f82 *DESCRIPTION
+614caa807ffc2c730b2e3f0b2a88afcd *DESCRIPTION
 4113bbd75a49019f7d3a81b820077590 *NAMESPACE
-c9dee8f90d6703cbb096e03f2c8bea10 *R/cov.sel.high.R
+01a3dc9cf4379cced57fd5c01a49e2a0 *R/cov.sel.high.R
 2bc93e81556a9847bc3a5b755d01a21c *R/cov.sel.high.lasso.R
 f6f5ced3abf16af3e8fc122b84c0885a *R/cov.sel.high.rf.R
 5e05bdbd651bd3edc53f327a43b56156 *R/cov.sel.high.sim.R

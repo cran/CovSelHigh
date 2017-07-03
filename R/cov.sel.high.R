@@ -182,7 +182,7 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         blacklistT<-data.frame(bmT)
         names(blacklistT)<-c("from","to")
         lt1<-dat[,c(covarcol,Tcol)]
-        res1<-mmhc(lt1,blacklist=blacklistT,optimized=FALSE, score=mmhc_score, alpha=alpha)
+        res1<-mmhc(lt1, blacklist = blacklistT, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
         ##Subset X.T
         XT<-res1$nodes$T$mb
         #print(XT)
@@ -195,7 +195,7 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         if(is.data.frame(lt2)==FALSE){
           Q1<-NULL
         }else{
-          res2<-mmhc(lt2,blacklist=blacklistQ,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res2<-mmhc(lt2, blacklist = blacklistQ, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Q1<-res2$nodes$Y$mb
         }
         lt3<-dat[which(dat[,Tcol]==0),c(covarsT,ycol)]
@@ -203,7 +203,7 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         if(is.data.frame(lt3)==FALSE){
           Q0<-NULL
         }else{
-          res3<-mmhc(lt3,blacklist=blacklistQ,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res3<-mmhc(lt3, blacklist = blacklistQ, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Q0<-res3$nodes$Y$mb
         }
         ##Subset Q=Q.1UQ.0
@@ -218,9 +218,8 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         lt5<-dat[which(dat[,Tcol]==0),c(covarcol,ycol)]
         
         
-        res4<-mmhc(lt4,blacklist=blacklistY,optimized=FALSE, score=mmhc_score, alpha=alpha)
-        res5<-mmhc(lt5,blacklist=blacklistY,optimized=FALSE, score=mmhc_score, alpha=alpha)
-        
+        res4<-mmhc(lt4, blacklist = blacklistY, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
+        res5<-mmhc(lt5, blacklist = blacklistY, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
         ##Subset X.1
         X1<-res4$nodes$Y$mb
         ##Subset X.0
@@ -242,14 +241,14 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         if(is.data.frame(lt6)==FALSE){
           Z1<-NULL
         }else{
-          res6<-mmhc(lt6,blacklist=blacklist1,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res6<-mmhc(lt6, blacklist = blacklist1, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Z1<-res6$nodes$T$mb
         }
         ##Subset Z.0
         if(is.data.frame(lt7)==FALSE){
           Z0<-NULL
         }else{
-          res7<-mmhc(lt7,blacklist=blacklist0,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res7<-mmhc(lt7, blacklist = blacklist0, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Z0<-res7$nodes$T$mb
         }
         ##Subset Z=Z.1UZ.0
@@ -1218,7 +1217,7 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         blacklistT<-data.frame(bmT)
         names(blacklistT)<-c("from","to")
         lt1<-dat[,c(covarcol,Tcol)]
-        res1<-mmhc(lt1,blacklist=blacklistT,optimized=FALSE, score=mmhc_score, alpha=alpha)
+        res1<-mmhc(lt1, blacklist = blacklistT, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
         ##Subset X.T
         XT<-res1$nodes$T$mb
         #print(XT)
@@ -1231,7 +1230,7 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         if(is.data.frame(lt2)==FALSE){
           Q1<-NULL
         }else{
-          res2<-mmhc(lt2,blacklist=blacklistQ,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res2<-mmhc(lt2, blacklist = blacklistQ, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Q1<-res2$nodes$Y$mb
         }
         lt3<-dat[which(dat[,Tcol]==0),c(covarsT,ycol)]
@@ -1239,7 +1238,7 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         if(is.data.frame(lt3)==FALSE){
           Q0<-NULL
         }else{
-          res3<-mmhc(lt3,blacklist=blacklistQ,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res3<-mmhc(lt3, blacklist = blacklistQ, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Q0<-res3$nodes$Y$mb
         }
         ##Subset Q=Q.1UQ.0
@@ -1254,9 +1253,8 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         lt5<-dat[which(dat[,Tcol]==0),c(covarcol,ycol)]
         
         
-        res4<-mmhc(lt4,blacklist=blacklistY,optimized=FALSE, score=mmhc_score, alpha=alpha)
-        res5<-mmhc(lt5,blacklist=blacklistY,optimized=FALSE, score=mmhc_score, alpha=alpha)
-        
+        res4<-mmhc(lt4, blacklist = blacklistY, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
+        res5<-mmhc(lt5, blacklist = blacklistY, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
         ##Subset X.1
         X1<-res4$nodes$Y$mb
         ##Subset X.0
@@ -1278,14 +1276,14 @@ cov.sel.high<-function(T=NULL, Y=NULL, X=NULL,type=c("mmpc","mmhc","rf","lasso")
         if(is.data.frame(lt6)==FALSE){
           Z1<-NULL
         }else{
-          res6<-mmhc(lt6,blacklist=blacklist1,optimized=FALSE,score=mmhc_score, alpha=alpha)
+          res6<-mmhc(lt6, blacklist = blacklist1, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Z1<-res6$nodes$T$mb
         }
         ##Subset Z.0
         if(is.data.frame(lt7)==FALSE){
           Z0<-NULL
         }else{
-          res7<-mmhc(lt7,blacklist=blacklist0,optimized=FALSE, score=mmhc_score, alpha=alpha)
+          res7<-mmhc(lt7, blacklist = blacklist0, restrict.args = list(optimized = FALSE, alpha = alpha), maximize.args = list(optimized = TRUE, score = mmhc_score))
           Z0<-res7$nodes$T$mb
         }
         ##Subset Z=Z.1UZ.0
